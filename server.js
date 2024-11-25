@@ -13,6 +13,14 @@ connectDB();
 // Middleware
 app.use(express.json());
 
+app.get('/', (req, res) => {
+    res.send('Products API running');
+});
+
+app.get('/home', (req, res) => {
+    res.send('API running');
+});
+
 // Routes
 app.use('/api/users', userRoutes);
 app.use('/api/accounts', accountRoutes);

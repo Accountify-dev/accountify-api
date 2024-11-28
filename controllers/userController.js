@@ -14,6 +14,7 @@ exports.signup = async (req, res) => {
         const { password: _, ...responseData } = { ...req.body, token: user.token };
 
         res.status(201).json({ 
+            message: "Signup successful",
             data: [responseData], 
             success: true
         });

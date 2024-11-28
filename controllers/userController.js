@@ -1,4 +1,4 @@
-const bcrypt = require('bcryptjs');
+// const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 
 // Signup
@@ -10,12 +10,19 @@ exports.signup = async (req, res) => {
         user.generateToken(); // Generate Bearer token
         await user.save();
 
+        // Exclude password from the response
+        const { password: _, ...responseData } = { ...req.body, token: user.token };
+
         res.status(201).json({ 
-            message: 'User registered successfully', 
-            token: user.token 
+            data: [responseData], 
+            success: true
         });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ 
+            message: "Email already in use. Try another email", 
+           // data: [req.body], 
+            success: false 
+        });
     }
 };
 
@@ -25,16 +32,34 @@ exports.login = async (req, res) => {
 
     try {
         const user = await User.findOne({ email });
-        if (!user) return res.status(404).json({ message: 'User not found' });
+        if (!user) return res.status(404).json({ 
+            message: "Invalid email!", 
+           // data: [req.body], 
+            success: false
+        });
 
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
+        if (user.password !== password) return res.status(401).json({ 
+            message: "Invalid password!", 
+           // data: [req.body], 
+            success: false
+        });
 
         user.generateToken(); // Generate new Bearer token on login
         await user.save();
 
-        res.status(200).json({ token: user.token });
+        // Exclude password from the response
+        const { password: _, ...responseData } = { ...req.body, token: user.token };
+
+        res.status(200).json({ 
+            message: "Login successful", 
+            data: [responseData], 
+            success: true
+        });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ 
+            message: "Login failed!", 
+           // data: [req.body], 
+            success: false
+        });
     }
 };

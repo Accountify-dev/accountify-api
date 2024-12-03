@@ -33,3 +33,33 @@ exports.createAccount = async (req, res) => {
         });
     }
 };
+
+
+// Get account data for the authenticated user
+exports.getAccounts = async (req, res) => {
+    const userId = req.user.id; // The authenticated user's ID
+
+    try {
+        // Fetch all accounts associated with the authenticated user
+        const accounts = await Account.find({ user: userId });
+
+        if (accounts.length === 0) {
+            return res.status(404).json({
+                message: 'No accounts found for this user.',
+                success: false
+            });
+        }
+
+        // Respond with the list of accounts
+        res.status(200).json({
+            message: 'Accounts retrieved successfully.',
+            data: accounts,
+            success: true
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: 'An error occurred while retrieving accounts.',
+            success: false
+        });
+    }
+};

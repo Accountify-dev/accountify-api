@@ -92,7 +92,7 @@ exports.getAccounts = async (req, res) => {
 
                 const creditTotal = totals.find(item => item._id === 'credit')?.total || 0;
                 const debitTotal = totals.find(item => item._id === 'debit')?.total || 0;
-                const netBalance = creditTotal - debitTotal;
+                const netBalance = Math.abs(creditTotal - debitTotal);
 
                 return {
                     accountName: account.account_name,

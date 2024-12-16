@@ -9,6 +9,6 @@ router.post('/create', authenticateUser, createAccount);
 // Route to get all accounts for the authenticated user
 router.get('/fetch', authenticateUser, getAccounts);
 
-router.get('/get/accounts',authenticateUser, getAccountDetailsWithTotals)
+router.get('/get/list',authenticateUser, getAccountDetailsWithTotals)
 
 module.exports = router;
